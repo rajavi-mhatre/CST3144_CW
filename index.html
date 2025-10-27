@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Vue After School </title>
+    <script src="https://unpkg.com/vue@2.7.8/dist/vue.js"></script>
+    <link href="https://cdn.jsdelivr.net/gh/eliyantosarage/font-awesome-pro@main/fontawesome-pro-6.5.1-web/css/all.… rel="rel=stylesheet>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="courses.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body> 
+    <div id="app">
+        <header>
+            <h1 v-text="sitename"></h1>
+            <button v-on:click = 'showCheckout'>Checkout
+                {{cartItemAmount}}
+            </button>
+        </header>
+        <main>
+            <div v-if = 'showcourse'>
+                <div v-for="course in courses" class="course-card">
+                    <figure>
+                        <img v-bind:src="course.image">
+                    </figure>
+                    <h2 v-text="course.title"></h2>
+                    <p v-html="course.description"></p>
+                    <!-- the double curly "moustache" syntax can be used instead of v-text -->
+                    <p v-html="course.Location"></p>
+                    <p>Price:{{course.price}}</p>
+                    <p>Inventory: {{ course.availableInventory }}</p>
+                    <button v-on:click="addToCart(course)" v-if="canAddToCart(course)">Add to Cart</button>
+                    <button v-on:click="removeFromCart(course)" v-if="canAddToCart(course)">Remove from cart</button>
+                    <span v-if="course.availableInventory<=cartCount(course.id)">Sold out!</span>
+                    <span v-else-if="course.availableInventory-cartCount(course.id)<5">Only {{course.availableInventory-cartItemAmount}} left!</span>
+                    <span v-else>Buy now!</span>
+                    <button disabled="disabled" v-else>Add to Cart</button> 
+                     <div>
+                        <span v-for="n in course.rating">★</span>
+                        <span v-for="n in 5-course.rating">☆</span>
+                    </div>
+                </div>
+            </div>
+        <div v-else>  </div>
+            <h2>Checkout</h2>
+            <p>
+                <strong>First Name:</strong>
+                <input v-model.trim="order.firstName"/>
+            </p>
+            <p>
+                <strong>Last Name:</strong>
+                <input v-model.trim="order.lastName"/>
+            </p>
+             <p>
+                <strong>Address:</strong> <input v-model="order.address"/>
+            </p>
+            <p>
+                <strong>City:</strong> <input v-model="order.city"/>
+            </p>
+            <p>
+        <strong>State:</strong>
+                    <select v-model="order.state">
+                        <option disabled value="">State</option>
+                        <option v-for="(state,key) in states" v-bind:value="state">{{key}}</option>
+                    </select>
+            </p>
+            <p>
+                <strong>Zip/Postal Code</strong><input v-model.number="order.zip" type="number">
+            </p>
+            <p><input type="checkbox" id="subject" value="true" v-model="order.subject"v-bind:true-value="order.sendSubject" v-bind:false-value="order.dontSendSubject">
+            <label for="subject"> Confirm Subject?</label></p>
+            <p><input type="radio" id="home" value="Home" v-model="order.methodOfShipping">
+            <label for="home">Home</label></p>
+            <p><input type="radio" id="business" value="Business" v-model="order.methodOfShipping">
+            <label for="business">Business</label></p>
+
+            <h2>Order Information</h2>
+            <p>First Name: {{order.firstName}}</p>
+            <p>Last Name: {{order.lastName}}</p>
+            <p>Address: {{order.address}}</p>
+            <p>City: {{order.city}}</p>
+            <p>Zip: {{order.zip}}</p>
+            <p>State: {{order.state}}</p>
+            <p>Subject: {{order.subject}}</p>
+            <p>Method:{{order.methodOfShipping}}</p>
+            <button v-on:click="submitForm">Place Order</button>
+
+        </div> 
+        </main>
+    </div>
+    <!-- methods -->
+    <script type="text/javascript">
+        var webstore=new Vue({
+            el:'#app',
+            data:{
+                sitename:'After School Activities!',
+                courses:courses,
+                cart:[],
+                showcourse: true,
+                order:{
+                    firstName:'',
+                    lastName:'',
+                    address:'',
+                    city:'',
+                    zip:'',
+                    state:'',
+                    method:'Home',
+                    subject:false,
+                    // sendSubject:'Send as a subject',
+                    // dontSendSubject:'DO not send as subject'
+                },
+                    states:{
+                        AL:'Alabama',
+                        AR:'Arizona',
+                        CA:'California',
+                        NV:'Nevada'
+                    },
+                },
+                
+            methods:{
+
+                // if pushing the course id gives us 1001, 1002 consecutively, doesn't that mean that every time you push a new course is being added to cart?
+                addToCart(course){
+                    this.cart.push(course.id);  
+                    this.updateInventoryAdd();
+                },
+                // updateInventoryAdd(){
+                //     course.availableInventory=course.availableInventory-1;
+                //     return this.course.availableInventory;
+                // },
+                removeFromCart(course){
+                    this.cart.pop(course.id);
+                    updateInventoryRemove();
+                    return this.cart
+                },
+                updateInventoryRemove(course){
+                    course.availableInventory=course.availableInventory+1;
+                    return course.availableInventory;
+                },
+                showCheckout(){
+                    this.showcourse = this.showcourse ? false : true;
+                },
+                submitForm(){
+                    alert('Order submitted!');
+                },
+                canAddToCart(course){
+                    return course.availableInventory>this.cartCount(course.id);
+                },
+                cartCount(id){
+                    let count=0;
+                    for(let i=0;i<this.cart.length;i++){
+                        if(this.cart[i]===id){
+                            count++
+                        }
+                    }
+                    return count;
+                }
+                
+            },
+            computed:{
+                cartItemAmount(){
+                    return this.cart.length;
+                },
+                sortedCourses(){
+                    let courseArray=this.courses.slice(0);
+                    function compare(a,b){
+                        if (a.price>b.price)
+                        return 1;
+                    if (a.price<b.price)
+                    return -1;
+                return 0;
+                    }
+                return courseArray.sort(compare)
+                }
+            },
+             
+        });
+    </script>
+</body>
+</html>
+<!-- diff bw vcs's -->
+<!-- diff bw delta based vs snap based -->
+<!-- github is our git server -->
