@@ -1,33 +1,37 @@
 let courses=[
     {
         id:1001,
-        title: "Mathematics",
-        description:"Is your child scared of mathematics? With our easy-to-learn and well-illustrated maths course, your child will be the top of their class!",
+        title: "Gaming",
+        description:"Gaming courses",
         Location: 'Alabama',
         price:20.00,
         image:"images/course-fullsize.png",
         availableInventory:10,
-        rating:3
+        rating:3,
+        icon: "fa fa-gamepad"
     },
     {
         id:1002,
-        title: "Physics",
-        description:"Unravel the mysteries of the world around you with our exciting Physics course!",
+        title: "Football",
+        description:"Football course!",
         Location: 'Arizona',
         price:2.99,
         image:"images/course-fullsize.png",
         availableInventory:7,
-        rating:3
+        rating:3,
+        icon: "fa fa-futbol-o"
+
     },
     {
         id:1003,
         title: "Music",
-        description:"Where words fail, our music course speaks!",
+        description:"Music course!",
         Location: 'Arizona',
         price:18.00,
         image:"images/course-fullsize.png",
         availableInventory:12,
-        rating:5
+        rating:5,
+        icon:"fa fa-music"
     },
     {
         id:1004,
@@ -37,7 +41,8 @@ let courses=[
         price:20.00,
         image:"images/course-fullsize.png",
         availableInventory:6,
-        rating:4
+        rating:4,
+        icon: "fa fa-paint-brush"
     },
     {
         id:1005,
@@ -47,58 +52,62 @@ let courses=[
         price:12.00,
         image:"images/course-fullsize.png",
         availableInventory:6,
-        rating:3
+        rating:3,
+        icon: "fa fa-camera"
     },
     {
         id:1005,
-        title: "Crochet",
-        description:"Entangle yourself in our wonderful crochet lessons!.",
+        title: "Gardening",
+        description:"Gardening.",
         Location: 'Nevada',
         price:12.00,
         image:"images/course-fullsize.png",
         availableInventory:6,
-        rating:3
+        rating:3,
+        icon: "fa fa-leaf"
     },
     {
         id:1005,
-        title: "Video Game Development",
-        description:"Build your own video game!",
+        title: "Poetry",
+        description:"Poetry",
         Location: 'Alabama',
         price:12.00,
         image:"images/course-fullsize.png",
         availableInventory:6,
-        rating:3
+        rating:3,
+        icon:"fa fa-pencil"
     },
     {
         id:1005,
         title: "Culinary",
-        description:"Channel your inner chef with our delicious culinary course!",
+        description:"Culinary course!",
         Location: 'Nevada',
         price:12.00,
         image:"images/course-fullsize.png",
         availableInventory:6,
-        rating:3
+        rating:3,
+        icon:"fa fa-cutlery"
     },
     {
         id:1005,
-        title: "Baking4Beginners",
-        description:"Treat yourself to out baking course!",
+        title: "Coding",
+        description:"Coding Course",
         Location: 'California',
         price:12.00,
         image:"images/course-fullsize.png",
         availableInventory:6,
-        rating:3
+        rating:3,
+        icon: "fa fa-code-fork"
     },
     {
         id:1005,
-        title: "Painting",
-        description:"Learn to paint with our fabulous painting course!",
+        title: "Reading",
+        description:"Reading",
         Location: 'California', 
         price:12.00,
         image:"images/course-fullsize.png",
         availableInventory:6,
-        rating:3
+        rating:3,
+        icon: "fa fa-book"
     },
-
-    
 ]
