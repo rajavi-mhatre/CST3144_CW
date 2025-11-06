@@ -20,6 +20,7 @@ let courses=[
         availableInventory:7,
         rating:3,
         icon: "fa-soccer-ball-o"
+    }
 "
 
     },
