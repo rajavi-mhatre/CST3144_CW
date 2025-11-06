@@ -50,6 +50,37 @@
             </div>
         <div v-else>  
             <h2>Checkout</h2>
+
+            <div v-for="course in courses" class="course-card">
+                <span v-if="">
+                    <figure>
+                        <i v-bind:class="course.icon"></i>
+                    </figure>
+                    <h2 v-text="course.title"> </h2>
+                    <p v-html="course.description"> </p>
+                    <!-- the double curly "moustache" syntax can be used instead of v-text -->
+                    <p v-html="course.Location"></p>
+                    <p v-html="course.availableInventory"></p>
+
+                    <p>Price:{{course.price}} </p>
+                    <p>Inventory: {{ course.availableInventory }} </p>
+
+                    <button v-on:click="removeFromCart(course)" v-if="canAddToCart(course)"> Remove from cart </button>
+                    <span v-if="course.availableInventory<1">Sold out! </span>
+                    <span v-else-if="course.availableInventory-cartCount(course)<5"> Only {{course.availableInventory}} left! </span>
+                    <span v-else>Buy now!</span>
+
+                    <button disabled="disabled" v-else>Add to Cart</button>
+                     <div>
+                        <span v-for="n in course.rating">★</span>
+                        <span v-for="n in 5-course.rating">☆</span>
+                    </div>
+                </div>
+                </span>
+            </div>
+
+
+
             <p>
                 <strong>First Name:</strong>
                 <input v-model.trim="order.firstName"/>
@@ -141,6 +172,7 @@
                     };
                     // return this.course.availableInventory;
                 },
+
                 // updateInventoryRemove(){
                 //     course.availableInventory=course.availableInventory+-1;
                 //     return this.course.availableInventory;
