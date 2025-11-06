@@ -20,10 +20,8 @@ let courses=[
         availableInventory:7,
         rating:3,
         icon: "fa-soccer-ball-o"
-    }
-"
-
     },
+
     {
         id:1003,
         title: "Music",
