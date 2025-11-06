@@ -12,14 +12,14 @@ let courses=[
     },
     {
         id:1002,
-        title: "Football",
-        description:"Football course!",
+        title: "Crafts",
+        description:"Crafts course!",
         Location: 'Arizona',
         price:2.99,
         image:"images/course-fullsize.png",
         availableInventory:7,
         rating:3,
-        icon: "fa-soccer-ball-o"
+        icon: "fa fa-scissors"
     },
 
     {
@@ -53,7 +53,7 @@ let courses=[
         image:"images/course-fullsize.png",
         availableInventory:6,
         rating:3,
-        icon: "fa fa-camera"
+        icon: "fa fa-camera-retro"
     },
     {
         id:1005,
