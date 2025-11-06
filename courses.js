@@ -19,7 +19,8 @@ let courses=[
         image:"images/course-fullsize.png",
         availableInventory:7,
         rating:3,
-        icon: "fa fa-futbol-o"
+        icon: "fa-soccer-ball-o"
+"
 
     },
     {
