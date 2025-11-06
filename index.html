@@ -37,8 +37,8 @@
 
                     <button v-on:click="addToCart(course)" v-if="canAddToCart(course)"> Add to Cart </button>
                     <!-- <button v-on:click="removeFromCart(course)" v-if="canAddToCart(course)"> Remove from cart </button> -->
-                    <span v-if="course.availableInventory<=cartCount(course.id)">Sold out! </span>
-                    <span v-else-if="course.availableInventory-cartCount(course.id)<5"> Only {{course.availableInventory}} left! </span>
+                    <span v-if="course.availableInventory<1">Sold out! </span>
+                    <span v-else-if="course.availableInventory-cartCount(course)<5"> Only {{course.availableInventory}} left! </span>
                     <span v-else>Buy now!</span>
 
                     <button disabled="disabled" v-else>Add to Cart</button>
@@ -157,7 +157,7 @@
                     alert('Order submitted!');
                 },
                 canAddToCart(course){
-                    return course.availableInventory>this.cartCount(course.id);
+                    return course.availableInventory>0;
                 },
                 cartCount(id){
                     let count=0;
