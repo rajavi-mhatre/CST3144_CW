@@ -228,7 +228,7 @@ var webstore=new Vue({
         },
         
         sortedCourses(){
-            let courseArray=[...this.courses];
+            let courseArray = [].concat(this.courses);
             courseArray.sort((a,b)=>{
                 let option1, option2;
                 switch(this.selectedSortField){
