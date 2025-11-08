@@ -21,6 +21,32 @@
             {{cartItemAmount}}
         </button>
 
+        <div> Sorted by: {{ selectedSortField }} - {{ selectedSortOrder }} </div>
+
+<!-- Radio buttons for ascending/descending order -->
+<div>
+    <input type="radio" id="sortAsc" value="Ascending" v-model="selectedSortOrder">
+    <label for="sortAsc">Ascending</label>
+    
+    <input type="radio" id="sortDesc" value="Descending" v-model="selectedSortOrder">
+    <label for="sortDesc">Descending</label>
+</div>
+
+<!-- Radio buttons for sorting field -->
+<div>
+    <input type="radio" id="sortLocation" value="Location" v-model="selectedSortField">
+    <label for="sortLocation">Location</label>
+    
+    <input type="radio" id="sortTitle" value="Title" v-model="selectedSortField">
+    <label for="sortTitle">Title</label>
+    
+    <input type="radio" id="sortPrice" value="Price" v-model="selectedSortField">
+    <label for="sortPrice">Price</label>
+</div>
+
+        
+
+
         <main>
             <div v-if = 'showcourse'>
                 <div v-for="course in courses" class="course-card">
@@ -145,6 +171,7 @@
                     state:'',
                     method:'Home',
                     subject:false,
+
                 },
                     states:{
                         AL:'Alabama',
@@ -152,16 +179,19 @@
                         CA:'California',
                         NV:'Nevada'
                     },
+                    
                 },
+                
                 
             methods:{
 
                 // if pushing the course id gives us 1001, 1002 consecutively, doesn't that mean that every time you push a new course is being added to cart?
                 addToCart(course){
-                    this.cart.push(course.id);  
+                    this.cart.push(course);  
                     course.availableInventory-=1;
                 },
                 removeFromCart(course){
+                    
                     this.cart.pop(course.id);
                     updateInventoryRemove();
                     return this.cart
