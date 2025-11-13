@@ -91,11 +91,10 @@
             <span v-else-if="course.availableInventory-cartCount(course)<5"> Only {{course.availableInventory}} left! </span>
             <span v-else>Buy now!</span>
 
-            <button disabled="disabled" v-else>Add to Cart</button>
-                <div>
-                    <span v-for="n in course.rating">★</span>
-                    <span v-for="n in 5-course.rating">☆</span>
-                </div>
+            <div>
+                <span v-for="n in course.rating">★</span>
+                <span v-for="n in 5-course.rating">☆</span>
+            </div>
         </div>
     </div>
 
