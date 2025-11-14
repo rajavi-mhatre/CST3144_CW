@@ -16,9 +16,10 @@
         <header>
             <h1 v-text="sitename"></h1> 
         </header>
-        <button v-on:click = 'showCheckout'>Checkout
+        <button v-bind:disabled="cartItemAmount<1" v-on:click = 'showCheckout'>Checkout
             <i class="fa fa-shopping-cart"></i>
             {{cartItemAmount}}
+            
         </button>
 
         <div> Sorted by: {{ selectedSortField }} - {{ selectOrder }} </div>
@@ -73,7 +74,7 @@
     </div>
 <div v-else>  
     <h2>Checkout</h2>
-    <div v-for="course in courses" class="course-card">
+    <div v-for="course in cart" class="course-card">
             <figure>
                 <i v-bind:class="course.icon"></i>
             </figure>
@@ -174,14 +175,13 @@ var webstore=new Vue({
         
     methods:{
 
-        // if pushing the course id gives us 1001, 1002 consecutively, doesn't that mean that every time you push a new course is being added to cart?
         addToCart(course){
             this.cart.push(course);  
             course.availableInventory-=1;
         },
         removeFromCart(course){
             
-            this.cart.pop(course.id);
+            this.cart.pop(course);
             updateInventoryRemove();
             return this.cart
         },
@@ -192,15 +192,15 @@ var webstore=new Vue({
             // return this.course.availableInventory;
         },
 
-        // updateInventoryRemove(){
-        //     course.availableInventory=course.availableInventory+-1;
-        //     return this.course.availableInventory;
-        // },
+        updateInventoryRemove(){
+            course.availableInventory=course.availableInventory+-1;
+            return this.course.availableInventory;
+        },
 
-        // updateInventoryRemove(course){
-        //     course.availableInventory=course.availableInventory+1;
-        //     return course.availableInventory;
-        // },
+        updateInventoryRemove(course){
+            course.availableInventory=course.availableInventory+1;
+            return course.availableInventory;
+        },
         showCheckout(){
             this.showcourse = this.showcourse ? false : true;
         },
@@ -266,6 +266,6 @@ var webstore=new Vue({
 </script>
 </body>
 </html>
-// <!-- diff bw vcs's -->
-// <!-- diff bw delta based vs snap based -->
-// <!-- github is our git server -->
+<!-- diff bw vcs's -->
+<!-- diff bw delta based vs snap based -->
+<!-- github is our git server -->
