@@ -16,42 +16,44 @@
         <header>
             <h1 v-text="sitename"></h1> 
         </header>
-        <button v-bind:disabled="cartItemAmount<1" v-on:click = 'showCheckout'>Checkout
+        <button v-bind:disabled="cartItemAmount<1" v-on:click = 'showCheckout'>Cart
             <i class="fa fa-shopping-cart"></i>
             {{cartItemAmount}}
             
         </button>
 
-        <div> Sorted by: {{ selectedSortField }} - {{ selectOrder }} </div>
-
-
-<div>
-    <input type="radio" id="sortAsc" value="Ascending" v-model="selectOrder">
-    <label for="sortAsc">Ascending</label>
-    
-    <input type="radio" id="sortDesc" value="Descending" v-model="selectOrder">
-    <label for="sortDesc">Descending</label>
-</div>
-
-
-<div>
-    <input type="radio" id="sortLocation" value="Location" v-model="selectedSortField">
-    <label for="sortLocation">Location</label>
-    
-    <input type="radio" id="sortTitle" value="Title" v-model="selectedSortField">
-    <label for="sortTitle">Title</label>
-    
-    <input type="radio" id="sortPrice" value="Price" v-model="selectedSortField">
-    <label for="sortPrice">Price</label>
-</div>
-
 <main>
+    
+
     <div v-if = 'showcourse'>
+    <div> Sorted by: {{ selectedSortField }} - {{ selectOrder }} </div>
+
+    <div>
+        <input type="radio" id="sortAsc" value="Ascending" v-model="selectOrder">
+        <label for="sortAsc">Ascending</label>
+        
+        <input type="radio" id="sortDesc" value="Descending" v-model="selectOrder">
+        <label for="sortDesc">Descending</label>
+    </div>
+
+
+    <div>
+        <input type="radio" id="sortLocation" value="Location" v-model="selectedSortField">
+        <label for="sortLocation">Location</label>
+        
+        <input type="radio" id="sortTitle" value="Title" v-model="selectedSortField">
+        <label for="sortTitle">Title</label>
+        
+        <input type="radio" id="sortPrice" value="Price" v-model="selectedSortField">
+        <label for="sortPrice">Price</label>
+    </div>
+
         <div v-for="course in sortedCourses" class="course-card">
+            
             <figure>
                 <i v-bind:class="course.icon"></i>
             </figure>
-            <h2 v-text="course.title"> </h2>
+            <h2 v-text="course.title"> ({{course.quantity}})</h2>
             <p v-html="course.description"> </p>
             <!-- the double curly "moustache" syntax can be used instead of v-text -->
             <p v-html="course.Location"></p>
@@ -60,12 +62,12 @@
             <p>Inventory: {{ course.availableInventory }} </p>
 
             <button v-on:click="addToCart(course)" v-if="canAddToCart(course)"> Add to Cart </button>
-            <!-- <button v-on:click="removeFromCart(course)" v-if="canAddToCart(course)"> Remove from cart </button> -->
+            <button disabled="disabled" v-else>Add to Cart</button>
             <span v-if="course.availableInventory<1">Sold out! </span>
             <span v-else-if="course.availableInventory-cartCount(course)<5"> Only {{course.availableInventory}} left! </span>
             <span v-else>Buy now!</span>
 
-            <button disabled="disabled" v-else>Add to Cart</button>
+            
                 <div>
                     <span v-for="n in course.rating">★</span>
                     <span v-for="n in 5-course.rating">☆</span>
@@ -73,8 +75,10 @@
         </div>
     </div>
 <div v-else>  
-    <h2>Checkout</h2>
+    <form>
+    <h2>Cart:</h2>
     <div v-for="course in cart" class="course-card">
+        <form>
             <figure>
                 <i v-bind:class="course.icon"></i>
             </figure>
@@ -88,6 +92,7 @@
             <p>Inventory: {{ course.availableInventory }} </p>
 
             <button v-on:click="removeFromCart(course)" v-if="canAddToCart(course)"> Remove from cart </button>
+            <span v-if="cart.length===0">Your cart is empty!</span>
             <span v-if="course.availableInventory<1">Sold out! </span>
             <span v-else-if="course.availableInventory-cartCount(course)<5"> Only {{course.availableInventory}} left! </span>
             <span v-else>Buy now!</span>
@@ -96,9 +101,8 @@
                 <span v-for="n in course.rating">★</span>
                 <span v-for="n in 5-course.rating">☆</span>
             </div>
+        
         </div>
-    </div>
-
     <p>
         <strong>First Name:</strong>
         <input v-model.trim="order.firstName"/>
@@ -125,6 +129,7 @@
     </p>
     <p><input type="checkbox" id="subject" value="true" v-model="order.subject"v-bind:true-value="order.sendSubject" v-bind:false-value="order.dontSendSubject">
     <label for="subject"> Confirm Order?</label></p>
+    </form>
     
 
     <h2>Order Information</h2>
@@ -136,11 +141,15 @@
     <p>State: {{order.state}}</p>
     <p>Subject: {{order.subject}}</p>
     <p>Method:{{order.methodOfSorting}}</p>
-    <button v-on:click="submitForm">Place Order</button>
+    <button v-on:click="submitForm">Checkout</button>
+
+    </div>
+
+
 
 </div> 
 </main>
-</div>
+
 <!-- methods -->
 <script type="text/javascript">
 var webstore=new Vue({
@@ -178,10 +187,11 @@ var webstore=new Vue({
         addToCart(course){
             this.cart.push(course);  
             course.availableInventory-=1;
+            
         },
         removeFromCart(course){
             
-            this.cart.pop(course);
+            this.cart.splice();
             updateInventoryRemove();
             return this.cart
         },
@@ -202,8 +212,10 @@ var webstore=new Vue({
             return course.availableInventory;
         },
         showCheckout(){
-            this.showcourse = this.showcourse ? false : true;
+            this.showcourse = !this.showcourse;
         },
+
+
         submitForm(){
             alert('Order submitted!');
         },
