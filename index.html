@@ -16,7 +16,7 @@
         <header>
             <h1 v-text="sitename"></h1> 
         </header>
-        <button v-bind:disabled="cartItemAmount<1" v-on:click = 'showCheckout'>Cart
+        <button v-bind:disabled="cartItemAmount<1" v-on:click = 'showCart'>Cart
             <i class="fa fa-shopping-cart"></i>
             {{cartItemAmount}}
             
@@ -211,7 +211,7 @@ var webstore=new Vue({
             course.availableInventory=course.availableInventory+1;
             return course.availableInventory;
         },
-        showCheckout(){
+        showCart(){
             this.showcourse = !this.showcourse;
         },
 
