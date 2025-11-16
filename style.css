@@ -1,81 +1,43 @@
 body{
-    background-color: whitesmoke;
+    background-color: #5d351b;
+    color: rgb(220, 185, 142);
 }
-.coursecard{
+/* 
+rgb(117, 41, 41);
+rgb(220, 185, 142);
+ #5d351b;
+ #aa8b5d; 
+ 'Times New Roman', Times, serif
+ Courier New', Courier, monospace*/
 
-    width: 300px;
-    border: 15px seashell;
-    padding: 50px;
-    margin: 20px;
-    display: inline-block;
-    text-align: center;
-    box-shadow: 0 4px;
-    background-color: bisque;
-    text-align: center;
-    border-radius: 15px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-    
 
-}
 header{
     font-family:'Courier New', Courier, monospace;
-    background-color: rgb(98, 98, 191);
+    background-color: rgb(117, 41, 41);;
+    margin-top: -25px;
+    margin-left: -7px;
+    margin-right: -8px;
+    height: 70px;
+    text-align:center;
 }
 .course-card {
   display: inline-block;
-  font-family:'Courier New', Courier, monospace;
+  font-family:'Times New Roman', Times, serif;
   width: 250px;
   margin: 15px;
+  margin-left: 100px;
+  margin-right: 100px;;
   padding: 20px; 
   border-radius: 15px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-  background-color: #fff;
+  background-color: #aa8b5d;
+  color: black;
   text-align: center;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-
-span.a {
-  display: inline; /* the default for span */
-  padding: 5px;
-  border: 2px solid red;
-}
-
-span.b {
-  display: inline-block;
-  width: 100px;
-  height: 35px;
-  padding: 5px;
-  border: 2px solid red;
-}
-
-span.c {
-  display: block;
-  width: 100px;
-  height: 35px;
-  padding: 5px;
-  border: 2px solid red;
-}
-
 
 .course-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 15px rgba(0,0,0,0.25);
 }
 
-.course-card img {
-  width: 100%;
-  border-radius: 10px;
-}
-
-.course-card h2 {
-  font-size: 1.2rem;
-  margin-top: 10px;
-}
-
-.course-card p {
-  font-size: 0.9rem;
-}
-.div{
-  margin-left: 500px;
-  margin-right: -500px;
-}
