@@ -110,4 +110,27 @@ let courses=[
         rating:3,
         icon: "fa fa-book"
     },
+    {
+        id:1006,
+        title: "Calligraphy",
+        description:"Calligraphy!",
+        Location: 'California', 
+        price:12.00,
+        image:"images/course-fullsize.png",
+        availableInventory:6,
+        rating:3,
+        icon: "fa fa-book"
+    },
+    {
+        id:1005,
+        title: "Boat Racing",
+        description:"Boat Racing!",
+        Location: 'California', 
+        price:12.00,
+        image:"images/course-fullsize.png",
+        availableInventory:6,
+        rating:3,
+        icon: "fa fa-book"
+    }
+
 ]
