@@ -16,7 +16,7 @@
         <header>
             <h1 v-text="sitename"></h1> 
         </header>
-        <button v-bind:disabled="cartItemAmount<1" v-on:click = 'showCart'>Cart
+        <button v-bind:disabled = "showcourse === true && cartItemAmount < 1" v-on:click = 'showCart'>Cart
             <i class="fa fa-shopping-cart"></i>
             {{cartItemAmount}}
             
@@ -75,7 +75,7 @@
         </div>
     </div>
 <div v-else>  
-    <form>
+    
     <h2>Cart:</h2>
     <div v-for="course in cart" class="course-card">
         <form>
@@ -91,7 +91,7 @@
             <p>Price:{{course.price}} </p>
             <p>Inventory: {{ course.availableInventory }} </p>
 
-            <button v-on:click="removeFromCart(course)" v-if="canAddToCart(course)"> Remove from cart </button>
+            <button type="button" v-on:click="removeFromCart(course)" v-if="canAddToCart(course)"> Remove from cart </button>
             <span v-if="cart.length===0">Your cart is empty!</span>
             <span v-if="course.availableInventory<1">Sold out! </span>
             <span v-else-if="course.availableInventory-cartCount(course)<5"> Only {{course.availableInventory}} left! </span>
@@ -129,7 +129,7 @@
     </p>
     <p><input type="checkbox" id="subject" value="true" v-model="order.subject"v-bind:true-value="order.sendSubject" v-bind:false-value="order.dontSendSubject">
     <label for="subject"> Confirm Order?</label></p>
-    </form>
+    
     
 
     <h2>Order Information</h2>
@@ -190,23 +190,20 @@ var webstore=new Vue({
             
         },
         removeFromCart(course){
+
+            let i= this.cart.indexOf(course);
+            this.cart.splice(i,1);
+            course.availableInventory+=1;
             
-            this.cart.splice();
-            updateInventoryRemove();
-            return this.cart
         },
-        updateInventoryAdd(course){
-            if(course.availableInventory>0){
-                course.availableInventory-=1;
-            };
-            // return this.course.availableInventory;
-        },
+        // updateInventoryAdd(course){
+        //     if(course.availableInventory>0){
+        //         course.availableInventory-=1;
+        //     };
+        //     // return this.course.availableInventory;
+        // },
 
-        updateInventoryRemove(){
-            course.availableInventory=course.availableInventory+-1;
-            return this.course.availableInventory;
-        },
-
+      
         updateInventoryRemove(course){
             course.availableInventory=course.availableInventory+1;
             return course.availableInventory;
