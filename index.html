@@ -51,7 +51,7 @@
         <div v-for="course in sortedCourses" class="course-card">
             
             <figure>
-                <i v-bind:class="course.icon"></i>
+                <i v-bind:class="course.icon" class="course-icon"></i>
             </figure>
             <h2 v-text="course.title"> ({{course.quantity}})</h2>
             <p v-html="course.description"> </p>
