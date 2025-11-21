@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
-    <script src="courses.js"></script>
+    <!-- <script src="courses.js"></script> -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body> 
@@ -25,7 +25,7 @@
 <main>
     
 
-    <div v-if = 'showcourse'>
+    <div v-if = 'showcourse' class="sort-card">
     <div> Sorted by: {{ selectedSortField }} - {{ selectOrder }} </div>
 
     <div>
@@ -144,9 +144,6 @@
     <button v-on:click="submitForm">Checkout</button>
 
     </div>
-
-
-
 </div> 
 </main>
 
@@ -156,7 +153,7 @@ var webstore=new Vue({
     el:'#app',
     data:{
         sitename:'After School Activities!',
-        courses:courses,
+        courses:[],
         cart:[],
         showcourse: true,
         selectedSortField:'Price',
@@ -172,6 +169,7 @@ var webstore=new Vue({
             subject:false,
 
         },
+        
         states:{
             AL:'Alabama',
             AR:'Arizona',
@@ -179,6 +177,14 @@ var webstore=new Vue({
             NV:'Nevada'
         },
             
+    },
+
+    created:function(){
+        fetch('http://localhost:3000/collection/lessons').then(res=>res.json())
+        .then(data=>{
+            this.courses=data;
+        });
+
     },
         
         
@@ -196,14 +202,7 @@ var webstore=new Vue({
             course.availableInventory+=1;
             
         },
-        // updateInventoryAdd(course){
-        //     if(course.availableInventory>0){
-        //         course.availableInventory-=1;
-        //     };
-        //     // return this.course.availableInventory;
-        // },
-
-      
+       
         updateInventoryRemove(course){
             course.availableInventory=course.availableInventory+1;
             return course.availableInventory;
@@ -241,8 +240,8 @@ var webstore=new Vue({
                 let option1, option2;
                 switch(this.selectedSortField){
                     case 'Location':
-                        option1 = a.location;
-                        option2 = b.location;
+                        option1 = a.Location;
+                        option2 = b.Location;
                         break;
                     case 'Title':
                         option1 = a.title;

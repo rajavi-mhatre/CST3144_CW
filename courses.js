@@ -64,7 +64,7 @@ let courses=[
         image:"images/course-fullsize.png",
         availableInventory:6,
         rating:3,
-        icon: "fa fa-leaf"
+        icon: "fa-solid fa-masks-theater"
     },
     {
         id:1005,
