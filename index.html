@@ -116,8 +116,8 @@
         <input type="text" v-model="order.address"/>
     </p>
     <p>
-        <strong>City:</strong> 
-        <input type="text" v-model="order.city"/>
+        <strong>Email:</strong> 
+        <input type="email" v-model="order.email"/>
     </p>
     <p>
         <strong>State:</strong>
@@ -139,7 +139,7 @@
     <p>First Name: {{order.firstName}}</p>
     <p>Last Name: {{order.lastName}}</p>
     <p>Address: {{order.address}}</p>
-    <p>City: {{order.city}}</p>
+    <p>Email: {{order.email}}</p>
     <p>Zip: {{order.zip}}</p>
     <p>State: {{order.state}}</p>
     <p>Subject: {{order.subject}}</p>
@@ -165,7 +165,7 @@ var afterSchool=new Vue({
             firstName:'',
             lastName:'',
             address:'',
-            city:'',
+            email:'',
             zip:'',
             state:'',
             method:'Home',
