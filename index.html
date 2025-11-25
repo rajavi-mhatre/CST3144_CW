@@ -8,22 +8,25 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
-    <!-- <script src="courses.js"></script> -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body> 
-    <div id="app">
+<main>
+
+<div id="app">
         <header>
             <h1 v-text="sitename"></h1> 
         </header>
+
         <button v-bind:disabled = "showcourse === true && cartItemAmount < 1" v-on:click = 'showCart'>Cart
             <i class="fa fa-shopping-cart"></i>
-            {{cartItemAmount}}
-            
+            {{cartItemAmount}}  
         </button>
 
-<main>
-    
+        <input type="text" v-model="input" placeholder="Search courses..."/>
+        <div class="error" v-if="input!=filteredCourses && input!=0">
+            <p>No results found!</p>
+        </div>
 
     <div v-if = 'showcourse' class="sort-card">
     <div> Sorted by: {{ selectedSortField }} - {{ selectOrder }} </div>
@@ -48,7 +51,7 @@
         <label for="sortPrice">Price</label>
     </div>
 
-        <div v-for="course in sortedCourses" class="course-card">
+        <div v-for="course in filteredCourses" class="course-card">
             
             <figure>
                 <i v-bind:class="course.icon" class="course-icon"></i>
@@ -74,8 +77,8 @@
                 </div>
         </div>
     </div>
+
 <div v-else>  
-    
     <h2>Cart:</h2>
     <div v-for="course in cart" class="course-card">
         <form>
@@ -133,7 +136,6 @@
     <p><input type="checkbox" id="subject" value="true" v-model="order.subject"v-bind:true-value="order.sendSubject" v-bind:false-value="order.dontSendSubject">
     <label for="subject"> Confirm Order?</label></p>
     
-    
 
     <h2>Order Information</h2>
     <p>First Name: {{order.firstName}}</p>
@@ -158,6 +160,7 @@ var afterSchool=new Vue({
         sitename:'After School Activities!',
         courses:[],
         cart:[],
+        input:"",
         showcourse: true,
         selectedSortField:'Price',
         selectOrder:'Ascending',
@@ -214,10 +217,6 @@ var afterSchool=new Vue({
             this.showcourse = !this.showcourse;
         },
 
-
-        submitForm(){
-            alert('Order submitted!');
-        },
         canAddToCart(course){
             return course.availableInventory>0;
         },
@@ -229,7 +228,7 @@ var afterSchool=new Vue({
                 }
             }
             return count;
-        }
+        },
         
     },
     computed:{
@@ -269,7 +268,13 @@ var afterSchool=new Vue({
 
             });
             return courseArray;
-        }
+        },
+        filteredCourses() {
+        return this.sortedCourses.filter(c =>
+        c.title.toLowerCase().includes(this.input.toLowerCase())
+    )
+}
+
 
         
 }
