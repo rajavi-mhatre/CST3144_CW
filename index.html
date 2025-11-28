@@ -152,11 +152,12 @@ var afterSchool = new Vue({
         },
     },
     created: function () {
-        fetch('http://localhost:3000/collection/lessons')
+        fetch('https://week8-final-12.onrender.com/collection/lessons')
             .then(res => res.json())
             .then(data => {
                 this.courses = data;
             });
+            
     },
     methods: {
         addToCart(course) {
@@ -172,8 +173,30 @@ var afterSchool = new Vue({
             this.showcourse = !this.showcourse;
         },
         submitForm() {
-            alert('Order submitted!');
+        if (!this.order.firstName && !this.order.lastName){
+            alert('Please enter first and last name.')
+        }
+        if(!this.order.email.includes("@")){
+            alert("Please enter a valid email ID.")
+        }
+        if(String(this.order.phone.length)!==10){
+            alert("Number must be 10 digits long!")
+        }
+            
+            fetch("https://week8-final-12.onrender.com/collection/orderInfo",{
+                method:"POST",
+                headers:{"Content-Type": "application/json"},
+                body:JSON.stringify({
+                    order:this.order,
+                    cart: this.cart
+                })
+            })
+            .then(response=>response.json())
+            .then(data=>{
+                 alert("Order submitted successfully!");
+            })
         },
+        
         canAddToCart(course) {
             return course.availableInventory > 0;
         },
@@ -186,6 +209,7 @@ var afterSchool = new Vue({
             }
             return count;
         },
+
     },
     computed: {
         cartItemAmount() {
