@@ -174,13 +174,16 @@ var afterSchool = new Vue({
         },
         submitForm() {
         if (!this.order.firstName && !this.order.lastName){
-            alert('Please enter first and last name.')
+            alert('Please enter first and last name.');
+            return;
         }
         if(!this.order.email.includes("@")){
-            alert("Please enter a valid email ID.")
+            alert("Please enter a valid email ID.");
+            return;
         }
-        if(String(this.order.phone.length)!==10){
-            alert("Number must be 10 digits long!")
+        if(String(this.order.phone).length!==10){
+            alert("Number must be 10 digits long!");
+            return;
         }
             
             fetch("https://week8-final-12.onrender.com/collection/orderInfo",{
