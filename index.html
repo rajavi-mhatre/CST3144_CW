@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,16 +18,19 @@
             <h1 v-text="sitename"></h1>
         </header>
 
-        <button v-bind:disabled="showcourse === true && cartItemAmount < 1" v-on:click="showCart">
+        <button
+            v-bind:disabled="showcourse === true && cartItemAmount < 1"
+            v-on:click="showCart">
             Cart <i class="fa fa-shopping-cart"></i> {{ cartItemAmount }}
         </button>
 
-        <input type="text" v-model="input" placeholder="Search courses..."/>
+        <input type="text" v-model="input" placeholder="Search courses..." />
 
         <div class="error" v-if="input && filteredCourses.length === 0">
             <p>No results found!</p>
         </div>
 
+    
         <div v-if="showcourse" class="sort-card">
 
             <div>Sorted by: {{ selectedSortField }} - {{ selectOrder }}</div>
@@ -67,7 +69,9 @@
                 <button disabled="disabled" v-else>Add to Cart</button>
 
                 <span v-if="course.availableInventory < 1">Sold out!</span>
-                <span v-else-if="course.availableInventory - cartCount(course) < 5">Only {{ course.availableInventory }} left!</span>
+                <span v-else-if="course.availableInventory - cartCount(course) < 5">
+                    Only {{ course.availableInventory }} left!
+                </span>
                 <span v-else>Buy now!</span>
 
                 <div>
@@ -77,6 +81,7 @@
             </div>
         </div>
 
+        
         <div v-else>
             <h2>Cart:</h2>
 
@@ -91,11 +96,15 @@
                 <p>Price: {{ course.price }}</p>
                 <p>Inventory: {{ course.availableInventory }}</p>
 
-                <button type="button" v-on:click="removeFromCart(course)" v-if="canAddToCart(course)">Remove from cart</button>
-                <span v-if="cart.length === 0">Your cart is empty!</span>
+                <button type="button" v-on:click="removeFromCart(course)" v-if="canAddToCart(course)">
+                    Remove from cart
+                </button>
 
+                <span v-if="cart.length === 0">Your cart is empty!</span>
                 <span v-if="course.availableInventory < 1">Sold out!</span>
-                <span v-else-if="course.availableInventory - cartCount(course) < 5">Only {{ course.availableInventory }} left!</span>
+                <span v-else-if="course.availableInventory - cartCount(course) < 5">
+                    Only {{ course.availableInventory }} left!
+                </span>
                 <span v-else>Buy now!</span>
 
                 <div>
@@ -104,13 +113,28 @@
                 </div>
             </div>
 
-            <p><strong>First Name:</strong> <input type="text" v-model.trim="order.firstName"></p>
-            <p><strong>Last Name:</strong> <input type="text" v-model.trim="order.lastName"></p>
-            <p><strong>Address:</strong> <input type="text" v-model="order.address"></p>
-            <p><strong>Email:</strong> <input type="email" v-model="order.email"></p>
-            <p><strong>Phone Number:</strong> <input v-model.number="order.phone" type="number"></p>
+            <p><strong>First Name:</strong>
+                <input type="text" v-model.trim="order.firstName">
+            </p>
+
+            <p><strong>Last Name:</strong>
+                <input type="text" v-model.trim="order.lastName">
+            </p>
+
+            <p><strong>Address:</strong>
+                <input type="text" v-model="order.address">
+            </p>
+
+            <p><strong>Email:</strong>
+                <input type="email" v-model="order.email">
+            </p>
+
+            <p><strong>Phone Number:</strong>
+                <input v-model.number="order.phone" type="number">
+            </p>
 
             <h2>Order Information</h2>
+
             <p>First Name: {{ order.firstName }}</p>
             <p>Last Name: {{ order.lastName }}</p>
             <p>Address: {{ order.address }}</p>
@@ -124,137 +148,148 @@
 </main>
 
 <script type="text/javascript">
-var afterSchool = new Vue({
-    el: '#app',
-    data: {
-        sitename: 'After School Activities!',
-        courses: [],
-        cart: [],
-        input: "",
-        showcourse: true,
-        selectedSortField: 'Price',
-        selectOrder: 'Ascending',
-        order: {
-            firstName: '',
-            lastName: '',
-            address: '',
-            email: '',
-            zip: '',
-            state: '',
-            method: 'Home',
-            subject: false,
-        },
-        states: {
-            AL: 'Alabama',
-            AR: 'Arizona',
-            CA: 'California',
-            NV: 'Nevada'
-        },
-    },
-    created: function () {
-        fetch('https://week8-final-12.onrender.com/collection/lessons')
-            .then(res => res.json())
-            .then(data => {
-                this.courses = data;
-            });
-            
-    },
-    methods: {
-        addToCart(course) {
-            this.cart.push(course);
-            course.availableInventory -= 1;
-        },
-        removeFromCart(course) {
-            let i = this.cart.indexOf(course);
-            this.cart.splice(i, 1);
-            course.availableInventory += 1;
-        },
-        showCart() {
-            this.showcourse = !this.showcourse;
-        },
-        submitForm() {
-        if (!this.order.firstName && !this.order.lastName){
-            alert('Please enter first and last name.');
-            return;
-        }
-        if(!this.order.email.includes("@")){
-            alert("Please enter a valid email ID.");
-            return;
-        }
-        if(String(this.order.phone).length!==10){
-            alert("Number must be 10 digits long!");
-            return;
-        }
-            
-            fetch("https://week8-final-12.onrender.com/collection/orderInfo",{
-                method:"POST",
-                headers:{"Content-Type": "application/json"},
-                body:JSON.stringify({
-                    order:this.order,
-                    cart: this.cart
-                })
-            })
-            .then(response=>response.json())
-            .then(data=>{
-                 alert("Order submitted successfully!");
-            })
-        },
-        
-        canAddToCart(course) {
-            return course.availableInventory > 0;
-        },
-        cartCount(id) {
-            let count = 0;
-            for (let i = 0; i < this.cart.length; i++) {
-                if (this.cart[i] === id) {
-                    count++
-                }
-            }
-            return count;
+    var afterSchool = new Vue({
+        el: '#app',
+        data: {
+            sitename: 'After School Activities!',
+            courses: [],
+            cart: [],
+            input: "",
+            showcourse: true,
+            selectedSortField: 'Price',
+            selectOrder: 'Ascending',
+            order: {
+                firstName: '',
+                lastName: '',
+                address: '',
+                email: '',
+                zip: '',
+                state: '',
+                method: 'Home',
+                subject: false,
+            },
+            states: {
+                AL: 'Alabama',
+                AR: 'Arizona',
+                CA: 'California',
+                NV: 'Nevada'
+            },
         },
 
-    },
-    computed: {
-        cartItemAmount() {
-            return this.cart.length;
+        created: function () {
+            fetch('https://week8-final-12.onrender.com/collection/lessons')
+                .then(res => res.json())
+                .then(data => {
+                    this.courses = data;
+                });
         },
-        sortedCourses() {
-            let courseArray = [].concat(this.courses);
-            courseArray.sort((a, b) => {
-                let option1, option2;
-                switch (this.selectedSortField) {
-                    case 'Location':
-                        option1 = a.Location;
-                        option2 = b.Location;
-                        break;
-                    case 'Title':
-                        option1 = a.title;
-                        option2 = b.title;
-                        break;
-                    case 'Spaces':
-                        option1 = a.availableInventory;
-                        option2 = b.availableInventory;
-                        break;
-                    case 'Price':
-                    default:
-                        option1 = a.price;
-                        option2 = b.price;
+
+        methods: {
+            addToCart(course) {
+                this.cart.push(course);
+                course.availableInventory -= 1;
+            },
+
+            removeFromCart(course) {
+                let i = this.cart.indexOf(course);
+                this.cart.splice(i, 1);
+                course.availableInventory += 1;
+            },
+
+            showCart() {
+                this.showcourse = !this.showcourse;
+            },
+
+            submitForm() {
+                if (!this.order.firstName && !this.order.lastName) {
+                    alert('Please enter first and last name.');
+                    return;
                 }
-                if (this.selectOrder === 'Ascending') {
-                    return option1 > option2 ? 1 : (option1 < option2 ? -1 : 0);
-                } else {
-                    return option1 < option2 ? 1 : (option1 > option2 ? -1 : 0);
+                if (!this.order.email.includes("@")) {
+                    alert("Please enter a valid email ID.");
+                    return;
                 }
-            });
-            return courseArray;
+                if (String(this.order.phone).length !== 10) {
+                    alert("Number must be 10 digits long!");
+                    return;
+                }
+
+                fetch("https://week8-final-12.onrender.com/collection/orderInfo", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        order: this.order,
+                        cart: this.cart
+                    })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert("Order submitted successfully!");
+                    });
+            },
+
+            canAddToCart(course) {
+                return course.availableInventory > 0;
+            },
+
+            cartCount(id) {
+                let count = 0;
+                for (let i = 0; i < this.cart.length; i++) {
+                    if (this.cart[i] === id) {
+                        count++
+                    }
+                }
+                return count;
+            },
         },
-        filteredCourses() {
-            return this.sortedCourses.filter(c =>
-                c.title.toLowerCase().includes(this.input.toLowerCase())
-            )
+
+        computed: {
+            cartItemAmount() {
+                return this.cart.length;
+            },
+
+            sortedCourses() {
+                let courseArray = [].concat(this.courses);
+
+                courseArray.sort((a, b) => {
+                    let option1, option2;
+
+                    switch (this.selectedSortField) {
+                        case 'Location':
+                            option1 = a.Location;
+                            option2 = b.Location;
+                            break;
+                        case 'Title':
+                            option1 = a.title;
+                            option2 = b.title;
+                            break;
+                        case 'Spaces':
+                            option1 = a.availableInventory;
+                            option2 = b.availableInventory;
+                            break;
+                        case 'Price':
+                        default:
+                            option1 = a.price;
+                            option2 = b.price;
+                    }
+
+                    if (this.selectOrder === 'Ascending') {
+                        return option1 > option2 ? 1 : (option1 < option2 ? -1 : 0);
+                    } else {
+                        return option1 < option2 ? 1 : (option1 > option2 ? -1 : 0);
+                    }
+                });
+
+                return courseArray;
+            },
+
+            filteredCourses() {
+                return this.sortedCourses.filter(c =>
+                    c.title.toLowerCase().includes(this.input.toLowerCase())
+                );
+            }
         }
-    }
-});
+    });
 </script>
 
 </body>
