@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vue After School</title>
 
+    <!-- links for Vue and Font Awesome icons -->
     <script src="https://unpkg.com/vue@2.7.8/dist/vue.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 <main>
     <div id="app">
@@ -18,19 +18,22 @@
             <h1 v-text="sitename"></h1>
         </header>
 
+        <!-- Cart Button; disabled if no item is added to cart. -->
         <button
             v-bind:disabled="showcourse === true && cartItemAmount < 1"
             v-on:click="showCart">
             Cart <i class="fa fa-shopping-cart"></i> {{ cartItemAmount }}
         </button>
 
+
+        <!-- Text field for search functionality. Returns an error message if course not found. -->
         <input type="text" v-model="input" placeholder="Search courses..." />
 
         <div class="error" v-if="input && filteredCourses.length === 0">
             <p>No results found!</p>
         </div>
 
-    
+        <!-- Radio buttons to sort courses by ascending or descending order. -->
         <div v-if="showcourse" class="sort-card">
 
             <div>Sorted by: {{ selectedSortField }} - {{ selectOrder }}</div>
@@ -43,6 +46,7 @@
                 <label for="sortDesc">Descending</label>
             </div>
 
+            <!-- Radio buttons to sort courses on the basis of location, title, price, or number of spaces available. -->
             <div>
                 <input type="radio" id="sortLocation" value="Location" v-model="selectedSortField">
                 <label for="sortLocation">Location</label>
@@ -52,28 +56,35 @@
 
                 <input type="radio" id="sortPrice" value="Price" v-model="selectedSortField">
                 <label for="sortPrice">Price</label>
+
+                <input type="radio" id="sortSpaces" value="Spaces" v-model="selectedSortField">
+                <label for="sortSpaces">Spaces</label>
+
             </div>
 
+            <!-- Course card details for each course. Includes course title, description, price, spaces available in the inventory, etc. -->
             <div v-for="course in filteredCourses" class="course-card">
                 <figure>
                     <i v-bind:class="course.icon" class="course-icon"></i>
                 </figure>
-
                 <h2 v-text="course.title"></h2>
                 <p v-html="course.description"></p>
                 <p v-html="course.Location"></p>
                 <p>Price: {{ course.price }}</p>
                 <p>Inventory: {{ course.availableInventory }}</p>
 
+                <!-- Add to cart button -->
                 <button v-on:click="addToCart(course)" v-if="canAddToCart(course)">Add to Cart</button>
                 <button disabled="disabled" v-else>Add to Cart</button>
 
+                <!-- Different messages displayed on adding to cart depending on course availability in the inventory. -->
                 <span v-if="course.availableInventory < 1">Sold out!</span>
                 <span v-else-if="course.availableInventory - cartCount(course) < 5">
                     Only {{ course.availableInventory }} left!
                 </span>
                 <span v-else>Buy now!</span>
 
+                <!-- Ratings for each course; out of 5 stars. -->
                 <div>
                     <span v-for="n in course.rating">★</span>
                     <span v-for="n in 5 - course.rating">☆</span>
@@ -81,7 +92,7 @@
             </div>
         </div>
 
-        
+        <!-- Cart page; contains all details of the course picked. Users can remove from cart if they wish to do so. -->
         <div v-else>
             <h2>Cart:</h2>
 
@@ -90,16 +101,19 @@
                     <i v-bind:class="course.icon"></i>
                 </figure>
 
+                <!-- Course details -->
                 <h2 v-text="course.title"></h2>
                 <p v-html="course.description"></p>
                 <p v-html="course.Location"></p>
                 <p>Price: {{ course.price }}</p>
                 <p>Inventory: {{ course.availableInventory }}</p>
 
+                <!-- 'Remove from cart' button -->
                 <button type="button" v-on:click="removeFromCart(course)" v-if="canAddToCart(course)">
                     Remove from cart
                 </button>
 
+                <!-- Messages for when user adds to cart -->
                 <span v-if="cart.length === 0">Your cart is empty!</span>
                 <span v-if="course.availableInventory < 1">Sold out!</span>
                 <span v-else-if="course.availableInventory - cartCount(course) < 5">
@@ -113,6 +127,8 @@
                 </div>
             </div>
 
+
+            <!-- Customer information -->
             <p><strong>First Name:</strong>
                 <input type="text" v-model.trim="order.firstName">
             </p>
@@ -133,6 +149,7 @@
                 <input v-model.number="order.phone" type="number">
             </p>
 
+            <!-- Customer Information added implicitly. -->
             <h2>Order Information</h2>
 
             <p>First Name: {{ order.firstName }}</p>
@@ -141,13 +158,15 @@
             <p>Email: {{ order.email }}</p>
             <p>Phone Number: {{ order.phone }}</p>
 
-            <button v-on:click="submitForm">Checkout</button>
+            <button v-on:click="submitForm" :disabled="cart.length===0 || !order.firstName || !order.lastName || !order.phone || !order.email">Checkout</button>
         </div>
 
     </div>
 </main>
 
 <script type="text/javascript">
+
+    // Vue instance
     var afterSchool = new Vue({
         el: '#app',
         data: {
@@ -163,9 +182,6 @@
                 lastName: '',
                 address: '',
                 email: '',
-                zip: '',
-                state: '',
-                method: 'Home',
                 subject: false,
             },
             states: {
@@ -176,6 +192,8 @@
             },
         },
 
+
+        // Fetching our lessons from backend using render.
         created: function () {
             fetch('https://week8-final-12.onrender.com/collection/lessons')
                 .then(res => res.json())
@@ -184,27 +202,37 @@
                 });
         },
 
+        // Methods:
         methods: {
+            // Adding courses to cart while decreasing availability from inventory:
             addToCart(course) {
                 this.cart.push(course);
                 course.availableInventory -= 1;
             },
 
+            // Removing from cart:
             removeFromCart(course) {
                 let i = this.cart.indexOf(course);
                 this.cart.splice(i, 1);
                 course.availableInventory += 1;
             },
 
+            // Toggling between main page and cart page.
             showCart() {
                 this.showcourse = !this.showcourse;
             },
 
+            // Customer order information filled out with validation:
             submitForm() {
-                if (!this.order.firstName && !this.order.lastName) {
-                    alert('Please enter first and last name.');
+                if (!this.order.firstName && !/^[A-Za-z]+$/.test(this.order.firstName)) {
+                    alert('Please enter first name.');
                     return;
                 }
+                if (!this.order.lastName && !/^[A-Za-z]+$/.test(this.order.lastName)) {
+                    alert('Please enter last name.');
+                    return;
+                }
+
                 if (!this.order.email.includes("@")) {
                     alert("Please enter a valid email ID.");
                     return;
@@ -214,6 +242,7 @@
                     return;
                 }
 
+                // Getting our order information loaded onto our backend on MongoDB
                 fetch("https://week8-final-12.onrender.com/collection/orderInfo", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -228,14 +257,16 @@
                     });
             },
 
+            // Can only add to cart if the course is available in stock.
             canAddToCart(course) {
                 return course.availableInventory > 0;
             },
 
+
             cartCount(id) {
                 let count = 0;
                 for (let i = 0; i < this.cart.length; i++) {
-                    if (this.cart[i] === id) {
+                    if (this.cart[i]._id === id._id) {
                         count++
                     }
                 }
@@ -244,10 +275,12 @@
         },
 
         computed: {
+            // Total amount of courses added to cart.
             cartItemAmount() {
                 return this.cart.length;
             },
 
+            // sorting functionality;
             sortedCourses() {
                 let courseArray = [].concat(this.courses);
 
@@ -283,9 +316,14 @@
                 return courseArray;
             },
 
+
+            // filtering courses when user types title, location, no. of spaces, or price.
             filteredCourses() {
                 return this.sortedCourses.filter(c =>
-                    c.title.toLowerCase().includes(this.input.toLowerCase())
+                    c.title.toLowerCase().includes(this.input.toLowerCase()) ||
+                    c.Location.toLowerCase().includes(this.input.toLowerCase()) ||
+                    String(c.price).includes(this.input) ||
+                    String(c.availableInventory).includes(this.input)
                 );
             }
         }
