@@ -14,15 +14,14 @@
 <main>
     <div id="app">
 
+        <!-- App header -->
         <header>
             <h1 v-text="sitename"></h1>
         </header>
         
         <!-- Cart Button; disabled if no item is added to cart. -->
         <button
-           
             v-bind:disabled="cartItemAmount < 1"
-
             v-on:click="showCart">
             Cart <i class="fa fa-shopping-cart"></i> {{ cartItemAmount }}
         </button>
@@ -35,11 +34,13 @@
             <p>No results found!</p>
         </div>
 
-        <!-- Radio buttons to sort courses by ascending or descending order. -->
+        <!-- Radio buttons to sort courses by ascending/descending order. -->
         <div v-if="showcourse" class="sort-card">
 
+            
             <div>Sorted by: {{ selectedSortField }} - {{ selectOrder }}</div>
 
+            <!-- Sort order selection -->
             <div>
                 <input type="radio" id="sortAsc" value="Ascending" v-model="selectOrder">
                 <label for="sortAsc">Ascending</label>
@@ -48,7 +49,7 @@
                 <label for="sortDesc">Descending</label>
             </div>
 
-            <!-- Radio buttons to sort courses on the basis of location, title, price, or number of spaces available. -->
+            <!-- Radio buttons to sort courses by attributes. -->
             <div>
                 <input type="radio" id="sortLocation" value="Location" v-model="selectedSortField">
                 <label for="sortLocation">Location</label>
@@ -64,7 +65,7 @@
 
             </div>
 
-            <!-- Course card details for each course. Includes course title, description, price, spaces available in the inventory, etc. -->
+            <!-- Course cards displayed using v-for -->
             <div v-for="course in filteredCourses" class="course-card">
                 <figure>
                     <i v-bind:class="course.icon" class="course-icon"></i>
@@ -75,11 +76,11 @@
                 <p>Price: {{ course.price }}</p>
                 <p>Inventory: {{ course.availableInventory }}</p>
 
-                <!-- Add to cart button -->
+                <!-- Add to cart button enableld only when space is available -->
                 <button v-on:click="addToCart(course)" v-if="canAddToCart(course)">Add to Cart</button>
                 <button disabled="disabled" v-else>Add to Cart</button>
 
-                <!-- Different messages displayed on adding to cart depending on course availability in the inventory. -->
+                <!-- Displaying dynamic availability messages depending on availability of courses. -->
                 <span v-if="course.availableInventory < 1">Sold out!</span>
                 <span v-else-if="course.availableInventory - cartCount(course) < 5">
                     Only {{ course.availableInventory }} left!
@@ -98,6 +99,7 @@
         <div v-else>
             <h2>Cart:</h2>
 
+            <!-- List of courses -->
             <div v-for="course in cart" class="course-card">
                 <figure>
                     <i v-bind:class="course.icon"></i>
@@ -115,7 +117,7 @@
                     Remove from cart
                 </button>
 
-                <!-- Messages for when user adds to cart -->
+                <!-- Dynamic messages for when user adds to cart -->
                 <span v-if="cart.length === 0">Your cart is empty!</span>
                 <span v-if="course.availableInventory < 1">Sold out!</span>
                 <span v-else-if="course.availableInventory - cartCount(course) < 5">
@@ -123,6 +125,7 @@
                 </span>
                 <span v-else>Buy now!</span>
 
+                <!-- Star ratings -->
                 <div>
                     <span v-for="n in course.rating">★</span>
                     <span v-for="n in 5 - course.rating">☆</span>
@@ -151,7 +154,7 @@
                 <input v-model.number="order.phone" type="number">
             </p>
 
-            <!-- Customer Information added implicitly. -->
+            <!-- Displaying submitted order information -->
             <h2>Order Information</h2>
 
             <p>First Name: {{ order.firstName }}</p>
@@ -160,15 +163,16 @@
             <p>Email: {{ order.email }}</p>
             <p>Phone Number: {{ order.phone }}</p>
 
+            <!-- Checkout button enabled only when valid data is provided -->
             <button v-on:click="submitForm" :disabled="cart.length===0 || !order.firstName || !order.lastName || !order.phone || !order.email">Checkout</button>
         </div>
 
     </div>
 </main>
 
+<!-- Vue.js instance -->
 <script type="text/javascript">
 
-    // Vue instance
     var afterSchool = new Vue({
         el: '#app',
         data: {
@@ -213,7 +217,7 @@
                 course.availableInventory -= 1;
             },
 
-            // Removing from cart:
+            // Removing from cart and restoring inventory:
             removeFromCart(course) {
                 let i = this.cart.indexOf(course);
                 this.cart.splice(i, 1);
@@ -245,7 +249,7 @@
                     return;
                 }
 
-                //display the price and the quantity of the customer's order.
+                //display order summary with quantities and total price
                 let countLessons={}; 
                 let totalPrice=0;
 
@@ -272,15 +276,14 @@
                     lessons.push(countLessons[id]);
                 }
 
-                // Getting our order information loaded onto our backend on MongoDB
+                // Getting order information loaded onto backend on MongoDB.
                 fetch("https://week8-final-12.onrender.com/collection/orderInfo", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         order: this.order,
                         lessons:lessons,
-                        totalPrice: totalPrice,
-                        // cart: this.cart
+                        totalPrice: totalPrice
                     })
                 })
                 .then(response => response.json())
@@ -304,7 +307,6 @@
                             })
                         });
 
-                        
 
                     }
                     alert("Order submitted successfully!");
@@ -318,7 +320,7 @@
                 return course.availableInventory > 0;
             },
 
-
+            // count of a specific course in the cart:
             cartCount(id) {
                 let count = 0;
                 for (let i = 0; i < this.cart.length; i++) {
