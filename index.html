@@ -17,10 +17,12 @@
         <header>
             <h1 v-text="sitename"></h1>
         </header>
-
+        
         <!-- Cart Button; disabled if no item is added to cart. -->
         <button
-            v-bind:disabled="showcourse === true && cartItemAmount < 1"
+           
+            v-bind:disabled="cartItemAmount < 1"
+
             v-on:click="showCart">
             Cart <i class="fa fa-shopping-cart"></i> {{ cartItemAmount }}
         </button>
@@ -182,6 +184,7 @@
                 lastName: '',
                 address: '',
                 email: '',
+                phone: '',
                 subject: false,
             },
             states: {
@@ -224,11 +227,11 @@
 
             // Customer order information filled out with validation:
             submitForm() {
-                if (!this.order.firstName && !/^[A-Za-z]+$/.test(this.order.firstName)) {
+                if (!this.order.firstName || !/^[A-Za-z]+$/.test(this.order.firstName)) {
                     alert('Please enter first name.');
                     return;
                 }
-                if (!this.order.lastName && !/^[A-Za-z]+$/.test(this.order.lastName)) {
+                if (!this.order.lastName || !/^[A-Za-z]+$/.test(this.order.lastName)) {
                     alert('Please enter last name.');
                     return;
                 }
@@ -242,19 +245,72 @@
                     return;
                 }
 
+                //display the price and the quantity of the customer's order.
+                let countLessons={}; 
+                let totalPrice=0;
+
+                for(let i=0; i<this.cart.length; i++){
+                    let course= this.cart[i];
+                    let id=course._id;
+                    totalPrice= totalPrice+course.price;
+
+                    if(countLessons[id]){
+                        countLessons[id].quantity++;
+                    }
+                    else{
+                        countLessons[id]={
+                            _id:id,
+                            title:course.title,
+                            price:course.price,
+                            quantity:1
+                        };
+                    }
+                }
+
+                let lessons=[];
+                for(let id in countLessons){
+                    lessons.push(countLessons[id]);
+                }
+
                 // Getting our order information loaded onto our backend on MongoDB
                 fetch("https://week8-final-12.onrender.com/collection/orderInfo", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         order: this.order,
-                        cart: this.cart
+                        lessons:lessons,
+                        totalPrice: totalPrice,
+                        // cart: this.cart
                     })
                 })
-                    .then(response => response.json())
-                    .then(data => {
-                        alert("Order submitted successfully!");
-                    });
+                .then(response => response.json())
+                .then(data => {
+                    for(let i=0; i<lessons.length; i++){
+                        let lesson=lessons[i];
+                        let course= null;
+
+                        for(let j=0;j<this.courses.length; j++){
+                            if(this.courses[j]._id===lesson._id){
+                                course=this.courses[j];
+                                break;
+                            }
+                        }
+                        let updatedInventory=course.availableInventory - lesson.quantity;
+                        fetch("https://week8-final-12.onrender.com/collection/lessons/" +lesson._id, {
+                            method: "PUT",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                availableInventory:updatedInventory
+                            })
+                        });
+
+                        
+
+                    }
+                    alert("Order submitted successfully!");
+                        this.cart=[];
+                        window.location.reload();
+                });
             },
 
             // Can only add to cart if the course is available in stock.
