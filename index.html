@@ -232,11 +232,11 @@
             // Customer order information filled out with validation:
             submitForm() {
                 if (!this.order.firstName || !/^[A-Za-z]+$/.test(this.order.firstName)) {
-                    alert('Please enter first name.');
+                    alert('Please enter valid first name.');
                     return;
                 }
                 if (!this.order.lastName || !/^[A-Za-z]+$/.test(this.order.lastName)) {
-                    alert('Please enter last name.');
+                    alert('Please enter valid last name.');
                     return;
                 }
 
